@@ -5,6 +5,7 @@
 function autoComplete(data,id){
 	$("#"+id).autocomplete({
 		lookup: data,
+		minChars: 3,
 		transformResult: function(response) {
 	        return {
 	            suggestions: $.map(response.myData, function(dataItem) {
@@ -114,10 +115,10 @@ CKEDITOR.dialog.add( 'autocompleteDialog', function ( editor ) {
         onLoad : function() {
         	var dialog = this;
         	var autoInput = dialog.getContentElement('autoTab','autoCompleteInput').getInputElement().getId();
-        	/*$.getScript("../lib/jquery.autocomplete.min.js", function(){       		   
+        	$.getScript("../lib/jquery.autocomplete.min.js", function(){       		   
             	getElements('https://giis.inf.um.es:8443/RepositorioCompetencias/services/restapi/repository/competency/?callback=?',autoComplete,autoInput)
-            });*/
-        	$("#"+autoInput).autocomplete({
+            });
+        	/*$("#"+autoInput).autocomplete({
         		open: function( event, ui ) {
         			$('.ui-autocomplete').css("z-index", parseInt( $('.cke_dialog').css('z-index') ) + 1000 );
         		},
@@ -130,7 +131,7 @@ CKEDITOR.dialog.add( 'autocompleteDialog', function ( editor ) {
         	    },
         	    minLength: 3,
         	    delay: 100
-        	});
+        	});*/
         }
     };
 });
