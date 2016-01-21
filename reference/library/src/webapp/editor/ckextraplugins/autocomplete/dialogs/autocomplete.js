@@ -117,21 +117,7 @@ CKEDITOR.dialog.add( 'autocompleteDialog', function ( editor ) {
         	var autoInput = dialog.getContentElement('autoTab','autoCompleteInput').getInputElement().getId();
         	$.getScript("../lib/jquery.autocomplete.min.js", function(){       		   
             	getElements('https://giis.inf.um.es:8443/RepositorioCompetencias/services/restapi/repository/competency/?callback=?',autoComplete,autoInput)
-            });
-        	/*$("#"+autoInput).autocomplete({
-        		open: function( event, ui ) {
-        			$('.ui-autocomplete').css("z-index", parseInt( $('.cke_dialog').css('z-index') ) + 1000 );
-        		},
-        		source: function (request, response) {
-        			return getElements("https://giis.inf.um.es:8443/RepositorioCompetencias/services/restapi/repository/competency/?callback=?", callAutoComplete, [response, request]);
-             	    },
-        	    select: function( event, ui ) {
-        	    	$('#autoCompleteResult').append('<p><strong>' + ui.item.id + '</strong> : ' + ui.item.value + '['+ui.item.lang+']</p>');
-        	    	return false;
-        	    },
-        	    minLength: 3,
-        	    delay: 100
-        	});*/
+            });        	
         }
     };
 });
