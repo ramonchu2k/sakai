@@ -1,23 +1,8 @@
 /**
  * 
  */
+url='/library/editor/ckextraplugins/autocomplete/';
 
-function autoComplete(data,id){
-	$("#"+id).autocomplete({
-		lookup: data,
-		transformResult: function(response) {
-	        return {
-	            suggestions: $.map(response.myData, function(dataItem) {
-	                return { value: dataItem.valueField, data: dataItem.dataField };
-	            })
-	        };
-	    },
-		onSelect: function (ui) {
-			$('#autoCompleteResult').append('<p><strong>' + ui.item.id + '</strong> : ' + ui.item.value + '['+ui.item.lang+']</p>');
-	    	return false;
-		}
-	});
-}
 function getElements(url,callback,params){
 	$.getJSON('https://jsonp.afeld.me/?callback=?&url='+encodeURIComponent('https://giis.inf.um.es:8443/RepositorioCompetencias/services/restapi/auth/login.json?user=sakai@um.es&pw=admin'), function(data){
 	    ticket = data.ticket;
@@ -39,17 +24,28 @@ function callByType(data, params){
     $('#typeListResult').selectable();
 }
 
-function callAutoComplete(data,params){
-	var response=params[0];
-	var request=params[1];
-	return response($.map(data, function (data) {
-    	return (data.id.concat(data.descriptionString[0].value).toString().includes(request.term)) ? {
-            id: data.id,
-            value: data.descriptionString[0].value,
-            lang: data.lang
-        } : null;
-    }));
+function callAutoNewComplete(data,params){
+	var autoNewInput=params;
+	$("#"+autoNewInput).autocomplete({
+		lookup: function(query, done){
+			var result = { suggestions: $.map(data,function(data){
+							console.log('data:'+data.descriptionString[0].value);
+							return (data.id.concat(data.descriptionString[0].value).toString().includes(query)) ? {
+								value: data.id,
+								data: data.descriptionString[0].value,
+								lang: data.lang
+							} : null;})
+						};
+			done(result);
+		},
+		minChars: 3,
+		onSelect: function (suggestions) {
+			$('#autoCompleteResult').append('<p><strong>' + suggestions.value + '</strong> : ' + suggestions.data + '['+suggestions.lang+']</p>');
+			return false;
+		}
+	});
 }
+
 
 CKEDITOR.dialog.add( 'autocompleteDialog', function ( editor ) {
     return {
@@ -63,10 +59,10 @@ CKEDITOR.dialog.add( 'autocompleteDialog', function ( editor ) {
                 label:      'Busqueda por texto',
                 title:      'Busqueda por texto',
                 elements: [
-                    {
+                   {
                         type:           'text',
-                        label:          'Introduzca el texto a buscar de la competencia',
-                        id:             'autoCompleteInput'
+                        label:          'Introduzca el texto a buscar de la competencia2',
+                        id:             'autoCompleteNewInput'
                     },
                     {
                         type: 'html',
@@ -113,24 +109,11 @@ CKEDITOR.dialog.add( 'autocompleteDialog', function ( editor ) {
         },
         onLoad : function() {
         	var dialog = this;
-        	var autoInput = dialog.getContentElement('autoTab','autoCompleteInput').getInputElement().getId();
-        	/*$.getScript("../lib/jquery.autocomplete.min.js", function(){       		   
-            	getElements('https://giis.inf.um.es:8443/RepositorioCompetencias/services/restapi/repository/competency/?callback=?',autoComplete,autoInput)
-            });*/
-        	$("#"+autoInput).autocomplete({
-        		open: function( event, ui ) {
-        			$('.ui-autocomplete').css("z-index", parseInt( $('.cke_dialog').css('z-index') ) + 1000 );
-        		},
-        		source: function (request, response) {
-        			return getElements("https://giis.inf.um.es:8443/RepositorioCompetencias/services/restapi/repository/competency/?callback=?", callAutoComplete, [response, request]);
-             	    },
-        	    select: function( event, ui ) {
-        	    	$('#autoCompleteResult').append('<p><strong>' + ui.item.id + '</strong> : ' + ui.item.value + '['+ui.item.lang+']</p>');
-        	    	return false;
-        	    },
-        	    minLength: 3,
-        	    delay: 100
-        	});
+        	var autoInput = dialog.getContentElement('autoTab','autoCompleteNewInput').getInputElement().getId();
+        	$.getScript(url+"lib/jquery.autocomplete.min.js").done(function(script, textStatus){       		   
+            	getElements('https://giis.inf.um.es:8443/RepositorioCompetencias/services/restapi/repository/competency/?callback=?',callAutoNewComplete,autoInput);
+            });
+        	
         }
     };
 }); 

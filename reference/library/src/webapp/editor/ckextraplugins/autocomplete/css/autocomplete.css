@@ -6,7 +6,7 @@
 #typeResult {height: 400px; max-height: 400px; max-width: 800px; overflow:auto;}
 .ui-widget-content > *{text-overflow: ellipsis; white-space: nowrap; overflow: hidden; cursor: pointer; max-width: 800px;}
 .ui-autocomplete-loading { background:url('https://svn.typo3.org/TYPO3v4/Core/tags/TYPO3_4-4-4/typo3/sysext/t3skin/icons/login-submit-progress.gif') no-repeat right center }
-.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; z-Index:10020 !important;}
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #F0F0F0; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
